@@ -1,0 +1,61 @@
+﻿@{
+    ViewData["Title"] = "Bingo 52-25 Game";
+}
+@using BingoModels.ViewModels;
+@model BingoGameViewModel
+<h1 class="text-center">@ViewData["Title"]</h1>
+
+<div class="container">
+    <div class="col-md-4 offset-md-4">
+        <p> 
+            @if (@Model.LinesCount == 12)
+            {
+                <a class="btn btn-sm btn-info offset-md-0" href="/Home/Index">Get new card</a>
+
+            } else
+            {
+                <a class="btn btn-sm btn-primary" href="/Home/Play?id=@Model.Card.Id">Next number:</a>  @Model.Card.SelectedNumbers.LastOrDefault()
+            }
+        </p>
+        
+        <table class="table table-bordered table-fixed">
+            <tbody>
+                @for (int i = 0; i < Model.Card.Size; i++)
+                {
+                    <tr>
+                        @for (int j = 0; j < Model.Card.Size; j++)
+                        {
+                            @if (Model.Card.SelectedNumbers.Contains(Model.Card.CardGrid[i, j]))
+                            {
+                                if (Model.SelectedLines != null
+                                && Model.SelectedLines[i, j] == Model.Card.CardGrid[i, j])
+                                {
+
+                                    <td class="table-success has-bingo-lines">@Model.Card.CardGrid[i,j]</td>
+
+                                }
+                                else
+                                {
+                                    <td class="table-warning">@Model.Card.CardGrid[i,j]</td>
+                                }
+                            }
+                            else
+                            {
+                                <td>@Model.Card.CardGrid[i,j]</td>
+                            }
+                        }
+                    </tr>
+                }
+            </tbody>
+         
+        </table>
+        @if (Model.LinesCount > 0)
+        {
+            <div class="textalign-content-center "><h3>BINGO!</h3></div>
+        }
+        <div>Count of calls: @Model.OrderedSelectedNumbers.Count</div>
+        <div>Selected numbers: @string.Join(", ",Model.Card.SelectedNumbers)</div>
+        <div>Selected ordered numbers :@string.Join(", ",Model.OrderedSelectedNumbers)</div>
+        <div>Winning lines: @Model.LinesCount</div>
+    </div>
+</div>
